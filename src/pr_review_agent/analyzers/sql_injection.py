@@ -1,7 +1,7 @@
 """Heuristics for SQL-injection-prone string building.
 
-This is intentionally a heuristic, pattern-based analyzer (not a real SQL
-parser / taint tracker) -- it looks for the classic anti-patterns: string
+This is intentionally a heuristic, pattern-based analyzer, not a real SQL
+parser or taint tracker. It looks for the classic anti-patterns: string
 concatenation, f-strings, ``%`` formatting, and ``.format()`` used to
 build a string that contains SQL keywords, especially when that string
 flows into ``execute(...)``/``executemany(...)``.

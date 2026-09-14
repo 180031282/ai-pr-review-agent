@@ -2,7 +2,7 @@
 
 Each analyzer is a small, focused unit that the orchestrator (the
 "agent") invokes once per changed file. Analyzers only ever look at the
-diff -- they never need network access or the full checked-out
+diff, so they never need network access or the full checked-out
 repository, which is what keeps ``--diff-file`` mode fully offline.
 """
 

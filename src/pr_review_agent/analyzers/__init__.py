@@ -8,7 +8,7 @@ To add a new analyzer:
    method).
 2. Import it below and add ``"my_check": MyCheckAnalyzer`` to ``REGISTRY``.
 
-That's it -- the CLI, the orchestrator, and ``--list-analyzers`` all pick
+That's it: the CLI, the orchestrator, and ``--list-analyzers`` all pick
 it up automatically.
 """
 

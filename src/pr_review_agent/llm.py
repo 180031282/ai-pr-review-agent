@@ -2,8 +2,8 @@
 
 If ``OPENAI_API_KEY`` is set in the environment, the executive summary at
 the top of the review is written by an LLM given the structured findings
-as context. If it is not set -- which is the default, and what the test
-suite always exercises -- a deterministic, template-based summary is
+as context. If it is not set (the default, and what the test suite
+always exercises), a deterministic, template-based summary is
 generated instead. The rest of the tool (analyzers, verdict, per-finding
 detail) is 100% identical either way: the LLM is decoration on top of a
 tool that is fully useful without it.
@@ -74,7 +74,7 @@ def template_summary(result: ReviewResult, pr_title: str | None = None) -> str:
         f"{subject} was reviewed against {result.files_reviewed} changed "
         f"{files_word} using {len(result.analyzers_run)} automated analyzers "
         f"({', '.join(result.analyzers_run)}). Found {n_findings} finding(s): "
-        f"{counts_str} -- {blurb}. Highest-priority items: {top_lines}. "
+        f"{counts_str}; {blurb}. Highest-priority items: {top_lines}. "
         f"{result.verdict.emoji} Recommended verdict: **{result.verdict.label}**."
     )
 

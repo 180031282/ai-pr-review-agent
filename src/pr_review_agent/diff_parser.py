@@ -180,7 +180,7 @@ def parse_diff(text: str) -> list[FileDiff]:
             continue
 
         if current_hunk is not None and line.startswith("\\"):
-            # "\ No newline at end of file" -- no line-number information.
+            # "\ No newline at end of file": no line-number information.
             i += 1
             continue
 

@@ -4,7 +4,7 @@ review comment.
 
 Deliberately implemented directly on top of ``requests`` rather than a
 full SDK like PyGithub, so the dependency footprint stays small and the
-behavior stays easy to reason about (and to mock in tests -- nothing here
+behavior stays easy to reason about (and to mock in tests: nothing here
 talks to the network at import time or module scope).
 """
 
@@ -78,8 +78,8 @@ class GitHubClient:
     def get_pull_request_diff(self, repo: str, pr_number: int) -> str:
         """Fetch the raw unified diff text for a PR, using the GitHub
         ``application/vnd.github.v3.diff`` media type so we get exactly
-        the same diff text ``git diff`` would produce -- no need to stitch
-        it together from the paginated /files endpoint."""
+        the same diff text ``git diff`` would produce, with no need to
+        stitch it together from the paginated /files endpoint."""
         url = f"{self.api_base}/repos/{repo}/pulls/{pr_number}"
         response = self.session.get(
             url,

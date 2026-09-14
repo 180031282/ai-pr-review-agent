@@ -3,10 +3,10 @@
 Two ways to run a review:
 
 - Live GitHub mode: ``pr-review-agent review --repo owner/repo --pr 123
-  [--token ...] [--post]`` -- fetches the PR diff from the GitHub API.
-- Local/offline mode: ``pr-review-agent review --diff-file some.diff`` --
-  reads a unified diff from disk and never touches the network. This is
-  the mode the test suite and the offline demo use.
+  [--token ...] [--post]``, which fetches the PR diff from the GitHub API.
+- Local/offline mode: ``pr-review-agent review --diff-file some.diff``,
+  which reads a unified diff from disk and never touches the network.
+  This is the mode the test suite and the offline demo use.
 """
 
 from __future__ import annotations
@@ -26,7 +26,7 @@ from pr_review_agent.report import render_markdown
 @click.group()
 @click.version_option(__version__, prog_name="pr-review-agent")
 def cli() -> None:
-    """AI PR Review Agent -- agentic, multi-analyzer automated code review
+    """AI PR Review Agent: agentic, multi-analyzer automated code review
     for GitHub pull requests."""
 
 
@@ -83,7 +83,7 @@ def list_analyzers() -> None:
     "--fail-on-request-changes",
     is_flag=True,
     default=False,
-    help="Exit with status 1 if the verdict is 'request_changes' -- useful for "
+    help="Exit with status 1 if the verdict is 'request_changes', useful for "
     "gating CI on the review result.",
 )
 def review(

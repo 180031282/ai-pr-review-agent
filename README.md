@@ -2,21 +2,21 @@
 
 An agentic, multi-analyzer automated code reviewer for GitHub pull requests. Point it at a real PR (or a local diff, entirely offline) and it fetches the diff, runs it through a battery of static-analysis "tools," synthesizes a structured markdown review with severities and `file:line` references, and can optionally post that review as a comment on the PR.
 
-Built as a portfolio project by **Lahari Dilli** to demonstrate a small, real agentic pipeline: an orchestrator that plans and runs a fixed set of tools over each changed file, aggregates their output, and makes a verdict decision — the same pattern that shows up in larger agentic systems, just scoped down to something you can actually install and run today.
+Built as a portfolio project by **Lahari Dilli** to demonstrate a small, real agentic pipeline: an orchestrator that plans and runs a fixed set of tools over each changed file, aggregates their output, and makes a verdict decision, the same pattern that shows up in larger agentic systems, just scoped down to something you can actually install and run today.
 
 ## Why this exists
 
-Human code review time is expensive, and a lot of what reviewers catch first — a hardcoded API key, a raw SQL string built with `+`, an `eval()` that shouldn't be there, a function that grew to 15 branches — is mechanical enough to check automatically. This tool runs those checks before a human ever opens the diff, so:
+Human code review time is expensive, and a lot of what reviewers catch first (a hardcoded API key, a raw SQL string built with `+`, an `eval()` that shouldn't be there, a function that grew to 15 branches) is mechanical enough to check automatically. This tool runs those checks before a human ever opens the diff, so:
 
 - Obvious security/quality issues (leaked secrets, SQL-injection-shaped code, dangerous `eval`/`exec`, unsafe `pickle`/`yaml.load`) get caught in seconds, not in review comments days later.
-- Reviewers spend their time on design and logic, not on pattern-matching for `os.system(`.
-- Every PR gets a consistent, structured report — severities, locations, and concrete suggestions — regardless of who's reviewing.
+- Reviewers spend their time on design and logic instead of pattern-matching for `os.system(`.
+- Every PR gets a consistent, structured report (severities, locations, and concrete suggestions) regardless of who's reviewing.
 
-It is **not** a replacement for a real security scanner (see [Limitations](#limitations)) — it's a fast, zero-config first pass that's genuinely useful in CI today.
+It is **not** a replacement for a real security scanner (see [Limitations](#limitations)). It's a fast, zero-config first pass that's genuinely useful in CI today.
 
 ## Install
 
-Not published to PyPI (yet) — install from a clone:
+Not published to PyPI yet, so install from a clone:
 
 ```bash
 git clone https://github.com/laharidilli/ai-pr-review-agent.git
@@ -27,11 +27,11 @@ python3 -m venv .venv
 
 This installs the `pr-review-agent` console script into `.venv/bin/`. Activate the venv (`source .venv/bin/activate`) or call `.venv/bin/pr-review-agent` directly.
 
-> **If this were published to PyPI**, install would just be `pip install ai-pr-review-agent`. Publishing it is a matter of running `python -m build` (already verified working — see below) and `twine upload dist/*` against a PyPI API token.
+> **If this were published to PyPI**, install would just be `pip install ai-pr-review-agent`. Publishing it is a matter of running `python -m build` (already verified working, see below) and `twine upload dist/*` against a PyPI API token.
 
 ## Usage
 
-### Local / offline mode — no GitHub API, no token, no network
+### Local / offline mode: no GitHub API, no token, no network
 
 This is the primary mode for CI and for trying the tool out. Point it at any unified diff file (`git diff > my.diff`, or a PR diff you downloaded):
 
@@ -65,7 +65,7 @@ pr-review-agent review --help
   --output TEXT                File to write markdown to. '-' prints to stdout. [default: -]
   --analyzers TEXT            Comma-separated subset of analyzers to run (default: all).
   --api-base TEXT             GitHub API base URL (for GitHub Enterprise Server).
-  --fail-on-request-changes   Exit 1 if the verdict is 'request_changes' -- for CI gating.
+  --fail-on-request-changes   Exit 1 if the verdict is 'request_changes' (for CI gating).
 ```
 
 List available analyzers:
@@ -92,7 +92,7 @@ $ pr-review-agent review --diff-file tests/fixtures/vulnerable.diff
 
 ## Executive Summary
 
-This pull request was reviewed against 5 changed files using 6 automated analyzers (secrets, sql_injection, dangerous_calls, complexity, todos, diff_size). Found 14 finding(s): 3 critical, 3 high, 2 medium, 6 low -- issues were found that should be fixed before merging. Highest-priority items: app/config.py:3 (critical); app/utils.py:3 (critical); app/utils.py:8 (critical). 🛑 Recommended verdict: **Request Changes**.
+This pull request was reviewed against 5 changed files using 6 automated analyzers (secrets, sql_injection, dangerous_calls, complexity, todos, diff_size). Found 14 finding(s): 3 critical, 3 high, 2 medium, 6 low; issues were found that should be fixed before merging. Highest-priority items: app/config.py:3 (critical); app/utils.py:3 (critical); app/utils.py:8 (critical). 🛑 Recommended verdict: **Request Changes**.
 
 ## Summary
 
@@ -154,14 +154,14 @@ This pull request was reviewed against 5 changed files using 6 automated analyze
   - *Suggestion:* Avoid dynamic execution of strings/untrusted input; use safer, explicit alternatives.
 
 ---
-*Generated by [AI PR Review Agent](https://github.com/laharidilli/ai-pr-review-agent) — analyzers: secrets, sql_injection, dangerous_calls, complexity, todos, diff_size.*
+*Generated by [AI PR Review Agent](https://github.com/laharidilli/ai-pr-review-agent). Analyzers: secrets, sql_injection, dangerous_calls, complexity, todos, diff_size.*
 ```
 
 </details>
 
-A clean diff (no issues) produces a short **Approve** report instead — see [`tests/fixtures/clean.diff`](tests/fixtures/clean.diff).
+A clean diff (no issues) produces a short **Approve** report instead; see [`tests/fixtures/clean.diff`](tests/fixtures/clean.diff).
 
-If `OPENAI_API_KEY` is set in the environment, the "Executive Summary" paragraph is instead written by an LLM given the same structured findings as context — everything else about the report (verdict logic, findings, severities) is identical either way. **No key is required**; the tool is fully functional, and the entire test suite runs, with zero API keys and zero network access.
+If `OPENAI_API_KEY` is set in the environment, the "Executive Summary" paragraph is instead written by an LLM given the same structured findings as context. Everything else about the report (verdict logic, findings, severities) is identical either way. **No key is required**; the tool is fully functional, and the entire test suite runs, with zero API keys and zero network access.
 
 ## Analyzers
 
@@ -180,9 +180,9 @@ Each analyzer is a small "tool" that looks at one changed file's diff and return
 
 The orchestrator maps the aggregated findings to one of three verdicts, mirroring GitHub's own PR review states:
 
-- **Request Changes** — any `critical` finding, or 3+ `high` findings.
-- **Comment** — any remaining `high` or `medium` finding.
-- **Approve** — only `low`/`info` findings, or none at all.
+- **Request Changes**: any `critical` finding, or 3+ `high` findings.
+- **Comment**: any remaining `high` or `medium` finding.
+- **Approve**: only `low`/`info` findings, or none at all.
 
 ## GitHub Actions integration
 
@@ -302,7 +302,7 @@ The registry pattern makes this a three-step, self-contained change:
 
 3. Add a fixture + test in `tests/test_analyzers.py`.
 
-That's it — the CLI's `--analyzers` flag, `list-analyzers`, and the orchestrator all pick it up automatically, with no other code to touch.
+That's it: the CLI's `--analyzers` flag, `list-analyzers`, and the orchestrator all pick it up automatically, with no other code to touch.
 
 ## Development
 
@@ -322,10 +322,10 @@ python -m build   # produces dist/*.whl and dist/*.tar.gz
 
 This is a fast, pattern-based first pass, not a replacement for a real SAST tool, a secret-scanning service (e.g. GitHub secret scanning, TruffleHog), or human review:
 
-- Analyzers work on the diff's added lines with regex/heuristic patterns — they don't build an AST or do cross-file/taint analysis (except `complexity`, which does parse added Python with `radon`, best-effort).
+- Analyzers work on the diff's added lines with regex/heuristic patterns. They don't build an AST or do cross-file/taint analysis (except `complexity`, which does parse added Python with `radon`, best-effort).
 - `complexity` can only analyze added lines that are themselves syntactically complete (e.g. a whole new function); a diff that touches a few lines inside an existing large function is skipped rather than guessed at.
-- False positives/negatives are possible and expected of a heuristic tool — the value is catching the *obvious* stuff fast and consistently, not being exhaustive.
+- False positives/negatives are possible and expected of a heuristic tool: the value is catching the *obvious* stuff fast and consistently, not being exhaustive.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).
