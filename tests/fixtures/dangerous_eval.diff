@@ -1,0 +1,14 @@
+diff --git a/app/utils.py b/app/utils.py
+new file mode 100644
+index 0000000..d6eabb2
+--- /dev/null
++++ b/app/utils.py
+@@ -0,0 +1,8 @@
++def calculate(expression):
++    # Warning: this trusts caller input completely
++    result = eval(expression)
++    return result
++
++
++def run_command(cmd):
++    exec(cmd)

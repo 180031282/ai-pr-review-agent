@@ -1,0 +1,14 @@
+diff --git a/app/math_utils.py b/app/math_utils.py
+new file mode 100644
+index 0000000..b0424cb
+--- /dev/null
++++ b/app/math_utils.py
+@@ -0,0 +1,8 @@
++def add(a, b):
++    """Return the sum of a and b."""
++    return a + b
++
++
++def subtract(a, b):
++    """Return a minus b."""
++    return a - b

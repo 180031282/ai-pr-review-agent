@@ -1,0 +1,49 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ai-pr-review-agent"
+version = "0.1.0"
+description = "Agentic, multi-analyzer automated code review CLI for GitHub pull requests."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+    { name = "Lahari Dilli", email = "laharidilli@gmail.com" }
+]
+keywords = ["github", "pull-request", "code-review", "ci", "static-analysis", "agentic-ai"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Quality Assurance",
+]
+dependencies = [
+    "requests>=2.31",
+    "radon>=6.0",
+    "click>=8.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "responses>=0.24",
+    "build>=1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/laharidilli/ai-pr-review-agent"
+
+[project.scripts]
+pr-review-agent = "pr_review_agent.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pr_review_agent"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

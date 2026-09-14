@@ -1,0 +1,41 @@
+name: AI PR Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install AI PR Review Agent
+        run: pip install -e .
+
+      - name: Run automated PR review
+        run: |
+          pr-review-agent review \
+            --repo "${{ github.repository }}" \
+            --pr "${{ github.event.pull_request.number }}" \
+            --token "${{ secrets.GITHUB_TOKEN }}" \
+            --post \
+            --output review.md
+
+      - name: Upload review as a build artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-review
+          path: review.md
